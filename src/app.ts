@@ -1,16 +1,37 @@
-import express, { Application, Request, Response } from "express"
-import cors from "cors"
-import { userRoutes } from "./modules/User/user.routes"
-import { adminRoute } from "./modules/Admin/admin.route"
-//import { userRouter } from "./modules/User/user.route"
-const app:Application = express()
-//parser
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+import express, { Application, NextFunction, Request, Response } from "express";
+import cors from "cors";
+import router from "./routes";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 
-app.get('/',async(req:Request,res:Response)=>{
- res.send("Ph HealthCare")
-})
-app.use('/api/v1/user',userRoutes)
-app.use("/api/v1/admin",adminRoute)
-export default app
+import { NotFound } from "./middlewares/NotFound";
+const app: Application = express();
+app.use(cors());
+//parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.get("/", async (req: Request, res: Response) => {
+  res.send("Ph HealthCare");
+});
+app.use("/api/v1/", router);
+
+app.use(globalErrorHandler);
+// app.use((err:any,req:Request,res:Response,next:NextFunction)=>{
+// res.status(500).json({
+//   success:false,
+//   message:err?.message || "something went wrong",
+//   error:err
+// })
+// })
+
+app.use(NotFound);
+// app.use((req, res, next) => {
+//   res.status(httpStatus.NOT_FOUND).json({
+//     success: false,
+//     message: "Api not found",
+//     err: {
+//       path: req.originalUrl,
+//     },
+//   });
+// });
+export default app;
