@@ -2,13 +2,15 @@ import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import router from "./routes";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
-
+import cookieParser from 'cookie-parser'
 import { NotFound } from "./middlewares/NotFound";
 const app: Application = express();
 app.use(cors());
 //parser
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
 
 app.get("/", async (req: Request, res: Response) => {
   res.send("Ph HealthCare");

@@ -9,7 +9,7 @@ export const globalErrorHandler = (
 ) => {
   res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
     success: false,
-    message:err?.name || "something went wrong",
+    message:err?.message || "something went wrong",
     err
   });
 };
