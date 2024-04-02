@@ -6,18 +6,22 @@ import AppError from "../errors/AppError";
 import httpStatus from "http-status";
 
 export const auth = (...roles: string[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: Request & { user?: any },
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const token = req.headers.authorization;
       if (!token) {
-        throw new AppError(httpStatus.UNAUTHORIZED,"user Unauthorized");
+        throw new AppError(httpStatus.UNAUTHORIZED, "user Unauthorized");
       }
       const verifiedUser = verifyToken(token, config.jwt.jwtSecret as Secret);
 
       if (roles.length && !roles.includes(verifiedUser.role)) {
-        throw new AppError(httpStatus.FORBIDDEN,"Forbidden");
+        throw new AppError(httpStatus.FORBIDDEN, "Forbidden");
       }
-      req.user=verifiedUser
+      req.user = verifiedUser;
       next();
     } catch (error) {
       next(error);
