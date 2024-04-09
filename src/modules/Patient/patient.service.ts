@@ -1,8 +1,8 @@
-import { Patient, Prisma, UserStatus } from "@prisma/client";
+import { Prisma, UserStatus } from "@prisma/client";
 import { prisma } from "../../shared/prisma";
 import paginationHelper from "../../helper/paginationHelper";
-import { IPatientFilterRequest, IPatientUpdate } from "./patient.interface";
-import { promises } from "dns";
+import {  IPatientUpdate } from "./patient.interface";
+
 
 const getAllFromDB = async (query: any, option:any) => {
   const { searchTerm, ...rest } = query;

@@ -1,5 +1,8 @@
 import { addHours, addMinutes, format } from "date-fns";
 import { prisma } from "../../shared/prisma";
+import paginationHelper from "../../helper/paginationHelper";
+import { Prisma } from "@prisma/client";
+import { JwtPayload } from "jsonwebtoken";
 
 const insertIntoDB = async (payload: any) => {
   const { startDate, endDate, startTime, endTime } = payload;
@@ -53,6 +56,79 @@ const insertIntoDB = async (payload: any) => {
   return schedules;
 };
 
+const getAllFromDB = async (query: any, option: any, user: JwtPayload) => {
+  const { startDate, endDate, ...rest } = query;
+
+  const { limit, page, skip, sortBy, sortOrder } = paginationHelper(option);
+  let andCondition: Prisma.ScheduleWhereInput[] = [];
+  if (startDate && endDate) {
+    andCondition.push({
+      AND: [
+        {
+          startDateTime: {
+            gte: startDate,
+          },
+        },
+        {
+          endDateTime: {
+            lte: endDate,
+          },
+        },
+      ],
+    });
+  }
+  if (Object.keys(rest).length > 0) {
+    andCondition.push({
+      AND: Object.keys(rest).map((key) => ({
+        [key]: {
+          equals: rest[key],
+        },
+      })),
+    });
+  }
+  const doctorSchedule = await prisma.doctorSchedule.findMany({
+    where: {
+      doctor: {
+        email: user.email,
+      },
+    },
+  });
+  const doctorScheduleIds = doctorSchedule.map((id) => id.scheduleId);
+  console.log(doctorScheduleIds);
+  const whereCondition: Prisma.ScheduleWhereInput = { AND: andCondition };
+  const result = await prisma.schedule.findMany({
+    where: {
+      ...whereCondition,
+      id: {
+        notIn: doctorScheduleIds,
+      },
+    },
+    skip,
+    take: limit,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
+
+  const total = await prisma.schedule.count({
+    where: {
+      ...whereCondition,
+      id: {
+        notIn: doctorScheduleIds,
+      },
+    },
+  });
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
 export const ScheduleService = {
   insertIntoDB,
+  getAllFromDB,
 };
