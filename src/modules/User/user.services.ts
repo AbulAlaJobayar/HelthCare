@@ -1,4 +1,4 @@
-import { Doctor, Prisma, UserRole } from "@prisma/client";
+import { Doctor, Patient, Prisma, UserRole } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { prisma } from "../../shared/prisma";
 import { fileUploader } from "../../helper/fileUploader";
@@ -65,6 +65,34 @@ const createDoctor = async (req: Request): Promise<Doctor> => {
 
   return result;
 };
+const createPatient = async (req: Request): Promise<Patient> => {
+  const file = req.file;
+
+  if (file) {
+    const uploadedProfileImage = await fileUploader.uploadToCloudinary(file);
+    req.body.patient.profilePhoto = uploadedProfileImage?.secure_url;
+  }
+
+  const hashPassword = await bcrypt.hash(req.body.password, 12);
+  const result = await prisma.$transaction(async transactionClient => {
+    const newUser = await transactionClient.user.create({
+      data: {
+        email: req.body.patient.email,
+        password: hashPassword,
+        role: UserRole.PATIENT,
+      },
+    });
+    const newPatient = await transactionClient.patient.create({
+      data: req.body.patient,
+    });
+
+    return newPatient;
+  });
+
+  return result;
+};
+
+
 
 const getAllFromDB = async (params: any, options: TPaginationOption) => {
   const { page, limit, skip } = paginationHelper(options);
@@ -93,7 +121,7 @@ const getAllFromDB = async (params: any, options: TPaginationOption) => {
       })),
     });
   }
-
+console.dir(andCondions,{depth:null})
   const whereConditons: Prisma.UserWhereInput =
     andCondions.length > 0 ? { AND: andCondions } : {};
 
@@ -221,6 +249,7 @@ const updateMyProfile = async (user: JwtPayload, req: Request) => {
 export const userService = {
   createAdmin,
   createDoctor,
+  createPatient,
   getAllFromDB,
   getMyProfile,
   updateMyProfile,

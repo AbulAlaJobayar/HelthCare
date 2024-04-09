@@ -13,8 +13,8 @@ type TOptionResult={
 }
 
 const paginationHelper=(option:TOption):TOptionResult=>{
-        const page=Number(option.page)
-        const limit=Number(option.limit)
+        const page=Number(option.page)||1
+        const limit=Number(option.limit)||10
         const skip=(Number(page)-1)*limit
         const sortBy=option.sortBy ||'createdAt'
         const sortOrder=option.sortOrder ||'desc'

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { SpecialtiesController } from "./specialties.controller";
 import { auth } from "../../middlewares/auth";
-import { UserRole, UserStatus } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 import { fileUploader } from "../../helper/fileUploader";
 import { SpecialtiesSchema } from "./spacialties.validation";
 
@@ -23,4 +23,6 @@ route.post(
     return SpecialtiesController.insertIntoDB(req, res, next);
   }
 );
+route.get('/',SpecialtiesController.getAllSpecialties);
+route.delete('/:id',SpecialtiesController.deleteSpecialties)
 export const SpecialtiesRoute = route;

@@ -21,9 +21,19 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
       status: httpStatus.OK,
       success: true,
-      message: "Doctor Created successfuly!",
+      message: "Doctor Created successfully!",
       data: result
   })
+});
+const createPatient = catchAsync(async (req: Request, res: Response) => {
+  //const { patient, ...userData } = req.body;
+  const result = await userService.createPatient(req);
+  sendResponse(res, {
+    status: httpStatus.OK,
+    success: true,
+    message: 'Patient created successfully!',
+    data: result,
+  });
 });
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
   // console.log(req.query)
@@ -63,6 +73,7 @@ const updateMyProfile = catchAsync(async(req:Request &{user?:any},res:Response)=
 export const userController = {
   createAdmin,
   createDoctor,
+  createPatient,
   getAllFromDB,
   getMyProfile,
   updateMyProfile
