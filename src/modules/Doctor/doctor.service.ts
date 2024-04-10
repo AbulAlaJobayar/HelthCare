@@ -71,6 +71,8 @@ const getAllDoctorFromDb = async (query: any, filter: any) => {
     data: result,
   };
 };
+
+
 const getByIdFromDB = async (id: string) => {
   const result = await prisma.doctor.findUnique({
     where: {
