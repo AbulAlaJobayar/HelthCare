@@ -20,7 +20,7 @@ const initPayment = async (appointmentId: string) => {
   });
 
   const result = await SslService.sslInit(appointment);
-
+console.log(result)
   return {
     payment_url: result.GatewayPageURL,
   };
@@ -40,10 +40,11 @@ const validatePayment = async (payload: any) => {
       message: "Payment Faild",
     };
   }
+ 
   await prisma.$transaction(async (tx) => {
     const updateData = await tx.payment.update({
       where: {
-        transactionId: response?.tran_id,
+        transactionId:response?.tran_id,
       },
       data: {
         status: PaymentStatus.PAID,

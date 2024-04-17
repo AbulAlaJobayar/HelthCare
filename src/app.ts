@@ -4,6 +4,8 @@ import router from "./routes";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import cookieParser from 'cookie-parser'
 import { NotFound } from "./middlewares/NotFound";
+import { AppointmentService } from "./modules/Appointment/appointment.service";
+import cron from 'node-cron'
 const app: Application = express();
 app.use(cors());
 //parser
@@ -16,6 +18,10 @@ app.get("/", async (req: Request, res: Response) => {
   res.send("Ph HealthCare");
 });
 app.use("/api/v1/", router);
+
+cron.schedule('* * * * *', () => {
+ AppointmentService.cancelUnpaidAppointments();
+});
 
 app.use(globalErrorHandler);
 // app.use((err:any,req:Request,res:Response,next:NextFunction)=>{
