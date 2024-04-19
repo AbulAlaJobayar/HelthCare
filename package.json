@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "tsnd --respawn src/server.ts"
+    "dev": "tsnd --respawn src/server.ts",
+    "seed":"tsnd --respawn prisma/seed.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

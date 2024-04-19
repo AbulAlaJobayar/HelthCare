@@ -11,6 +11,7 @@ import { AppointmentRoute } from "../modules/Appointment/appointment.route";
 import { PaymentRoute } from "../modules/Payment/payment.route";
 import { PrescriptionRoute } from "../modules/Prescription/prescription.routes";
 import { ReviewRoute } from "../modules/Review/review.routes";
+import { MetaRoutes } from "../modules/Meta/meta.routes";
 
 const router=Router()
 const moduleRoutes=[
@@ -61,6 +62,10 @@ const moduleRoutes=[
         {
                 path:"/review",
                 route:ReviewRoute
+        },
+        {
+                path:"/meta",
+                route:MetaRoutes
         }
 
 ]

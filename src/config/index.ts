@@ -25,4 +25,10 @@ export default {
     sandbox_url: process.env.SANDBOX_URL,
     validationApi:process.env.VALIDATION_API
   },
+  supperAdmin:{
+    supperAdminName:process.env. SUPPER_ADMIN_NAME,
+    supperAdminEmail:process.env.SUPPER_ADMIN_EMAIL,
+    supperAdminPassword:process.env.SUPPER_ADMIN_PASSWORD,
+    supperAdminContactNo:process.env.SUPPER_ADMIN_CONTACT_NO
+  }
 };

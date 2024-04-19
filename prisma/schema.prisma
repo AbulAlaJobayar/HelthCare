@@ -46,6 +46,7 @@ model Doctor {
   experience          Int                 @default(0)
   gender              Gender
   appointmentFee      Int
+  averageRating       Float               @default(0.0)
   qualification       String
   currentWorkingPlace String
   designation         String
@@ -53,7 +54,6 @@ model Doctor {
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   user                User                @relation(fields: [email], references: [email])
-  // doctorSpecialties   DoctorSpecialties[]
   doctorSpecialties   DoctorSpecialties[]
   DoctorSchedule      DoctorSchedule[]
   Appointment         Appointment[]
